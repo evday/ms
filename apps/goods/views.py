@@ -2,6 +2,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics
 from rest_framework.pagination import PageNumberPagination
+from rest_framework import viewsets
+from rest_framework import mixins
+from django_filters.rest_framework import DjangoFilterBackend
+
+
+from .filters import GoodsFilter
 
 class GoodsPagination(PageNumberPagination):
     page_size = 10
@@ -19,10 +25,13 @@ from .serializer import GoodsSerialize
 #         serializer = GoodsSerialize(goods, many=True)
 #
 #         return Response(serializer.data)
-class GoodsListView(generics.ListAPIView):
+class GoodsListSetView(mixins.ListModelMixin,viewsets.GenericViewSet):
     '''
     商品列表页
     '''
     queryset = Goods.objects.all()
     serializer_class = GoodsSerialize
     pagination_class = GoodsPagination
+    filter_backends = (DjangoFilterBackend,)
+    filter_class = GoodsFilter
+

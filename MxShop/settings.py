@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'trade',
     'user_operation',
     'rest_framework',
+    'django_filters'
 ]
 
 MIDDLEWARE = [
