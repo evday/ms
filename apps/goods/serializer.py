@@ -8,15 +8,29 @@ from .models import Goods,GoodsCategory
 #     goods_font_image = serializers.ImageField()
 
 # ModelSerializer 的嵌套使用
-class GoodsCategorySerialize(serializers.ModelSerializer):
+class CategorySerializer3(serializers.ModelSerializer):
+    class Meta:
+        model = GoodsCategory
+        fields = "__all__"
+
+
+class CategorySerializer2(serializers.ModelSerializer):
+    sub_cat = CategorySerializer3(many=True) #sub_cat 是我们自关联的related_name
+    class Meta:
+        model = GoodsCategory
+        fields = "__all__"
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    sub_cat = CategorySerializer2(many=True)
     class Meta:
         model = GoodsCategory
         fields = "__all__"
 
 class GoodsSerialize(serializers.ModelSerializer):
-    # category = GoodsCategorySerialize()
+    category = CategorySerializer()
     class Meta:
         model = Goods
         fields = "__all__"
-        depth = 2
-        
+        # depth = 2
+

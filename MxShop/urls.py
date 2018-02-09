@@ -17,13 +17,15 @@ from django.conf.urls import url,include
 from django.contrib import admin
 from MxShop.settings import MEDIA_ROOT
 from django.views.static import serve
-from goods.views import GoodsListSetView
+from goods.views import GoodsListSetView,CategoryViewset
 from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import DefaultRouter
 
 rooter = DefaultRouter()
 #配置goods的url
-rooter.register(r"goods",GoodsListSetView)
+rooter.register(r"goods",GoodsListSetView,base_name="goods")
+#配置categorys的url
+rooter.register(r"categorys",CategoryViewset,base_name="categorys")
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^media/(?P<path>.*)$',serve,{"document_root":MEDIA_ROOT}),#配置media 路径
