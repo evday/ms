@@ -28,13 +28,16 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-
+class GoodsImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GoodsImage
+        fields = ("image", )
 
 class GoodsSerialize(serializers.ModelSerializer):
     category = CategorySerializer()
-
+    # images = GoodsImageSerializer(many=True)
     class Meta:
         model = Goods
         fields = "__all__"
-        # depth = 2
+
 
