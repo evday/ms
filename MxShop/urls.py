@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url,include
-from django.contrib import admin
+import xadmin
 from MxShop.settings import MEDIA_ROOT
 from django.views.static import serve
 from goods.views import GoodsListSetView,CategoryViewset
@@ -27,7 +27,7 @@ rooter.register(r"goods",GoodsListSetView,base_name="goods")
 #配置categorys的url
 rooter.register(r"categorys",CategoryViewset,base_name="categorys")
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
+    url(r'^xadmin/', xadmin.site.urls),
     url(r'^media/(?P<path>.*)$',serve,{"document_root":MEDIA_ROOT}),#配置media 路径
     url(r'^api-auth/', include('rest_framework.urls')),
 
