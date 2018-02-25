@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'xadmin',
     'corsheaders',
     'crispy_forms',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -157,3 +158,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR,"media")
 # }
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = ('bootstrap', 'uni_form', 'bootstrap3', 'bootstrap4', 'semantic-ui')
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    )
+}
