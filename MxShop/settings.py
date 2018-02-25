@@ -168,3 +168,15 @@ REST_FRAMEWORK = {
 
     )
 }
+
+import datetime
+JWT_AUTH = {
+    #设置过期时间
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7),
+    'JWT_AUTH_HEADER_PREFIX': 'JWT',
+}
+
+#认证
+AUTHENTICATION_BACKENDS = (
+    'users.views.CustomBackend',
+)
