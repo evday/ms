@@ -180,3 +180,10 @@ JWT_AUTH = {
 AUTHENTICATION_BACKENDS = (
     'users.views.CustomBackend',
 )
+
+
+#手机号码正则表达式
+REGEX_MOBILE = '^1[358]\d{9}$|^147\d{8}$|^176\d{8}$'
+
+# 云片网设置
+APIKEY = 'b45f959119f80bac34d83c41d9901f4d'
