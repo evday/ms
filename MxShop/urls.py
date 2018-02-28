@@ -18,15 +18,20 @@ import xadmin
 from MxShop.settings import MEDIA_ROOT
 from django.views.static import serve
 from goods.views import GoodsListSetView,CategoryViewset
+from users.views import UserViewset
 from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken import views
 from rest_framework_jwt.views import obtain_jwt_token
+
 rooter = DefaultRouter()
 #配置goods的url
 rooter.register(r"goods",GoodsListSetView,base_name="goods")
 #配置categorys的url
 rooter.register(r"categorys",CategoryViewset,base_name="categorys")
+#配置users的url
+rooter.register(r"users",UserViewset,base_name="users")
+
 urlpatterns = [
     url(r'^xadmin/', xadmin.site.urls),
     url(r'^media/(?P<path>.*)$',serve,{"document_root":MEDIA_ROOT}),#配置media 路径
