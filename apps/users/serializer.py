@@ -38,7 +38,8 @@ class SmsSerializer(serializers.Serializer):
 
 class UserRegSerializer(serializers.ModelSerializer):
     # 数据库中不存在的字段
-    code = serializers.CharField(required=True,max_length=4,min_length=4,help_text='验证码',
+    # write_only 只可写，不可以被序列化
+    code = serializers.CharField(required=True,max_length=4,min_length=4,help_text='验证码',write_only=True,
                                  error_messages={
                                      "blank":"请输入验证码",
                                      "required":"请输入验证码",
@@ -49,6 +50,21 @@ class UserRegSerializer(serializers.ModelSerializer):
     #UniqueValidar django rest-framework 提供的验证规则
     username = serializers.CharField(label='用户名',help_text='用户名',
                                      validators=[UniqueValidator(queryset=User.objects.all(),message="用户名已存在")])
+    #这里password 设置write_only 是为了安全，不可被序列化返回,style 设置input框的样式，
+    password = serializers.CharField(
+        style={'input_type':'password'},help_text='密码',label='密码',write_only=True,
+    )
+
+    # 密文保存密码,接下来用django 的信号来实现
+
+    # def create(self,validated_data):
+    #     user = super().create(validated_data=validated_data)
+    #     user.set_password(validated_data['password'])
+    #     user.save()
+    #     return user
+
+
+
 
     def validate_code(self,code):
         '''
@@ -82,4 +98,4 @@ class UserRegSerializer(serializers.ModelSerializer):
 
     class Meta:
         model=User
-        fields=("username","code","mobile")
+        fields=("username","code","mobile","password")
