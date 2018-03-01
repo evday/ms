@@ -9,6 +9,8 @@ from rest_framework import viewsets
 from rest_framework import status
 from rest_framework.response import Response
 
+from rest_framework_jwt.serializers import jwt_encode_handler,jwt_payload_handler
+
 from .serializer import SmsSerializer,UserRegSerializer
 from utils.yunpian import YunPian
 from MxShop.settings import APIKEY
@@ -75,9 +77,26 @@ class SmsCodeViewSet(CreateModelMixin,viewsets.GenericViewSet):
 class UserViewset(CreateModelMixin,viewsets.GenericViewSet):
     '''用户'''
     serializer_class = UserRegSerializer
+
+
+    # 将token返回回去，写到浏览器cookies中，实现注册完成后自动登录
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = self.perform_create(serializer)
+
+        # 根据user生成token
+        re_dict = serializer.data
+        payload = jwt_payload_handler(user)
+        re_dict['token'] = jwt_encode_handler(payload)
+        re_dict['name'] = user.name if user.name else user.username
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
     
-
-
+    #这里需要取到用户对象,源码只是做了保存，没有返回
+    def perform_create(self, serializer):
+        return serializer.save()
 
 
 
