@@ -27,7 +27,7 @@ from .serializer import GoodsSerialize,CategorySerializer
 #         serializer = GoodsSerialize(goods, many=True)
 #
 #         return Response(serializer.data)
-class GoodsListSetView(mixins.ListModelMixin,viewsets.GenericViewSet):
+class GoodsListSetView(mixins.ListModelMixin,mixins.RetrieveModelMixin,viewsets.GenericViewSet):
     '''
     商品列表页,分页，搜索，过滤，排序
     '''

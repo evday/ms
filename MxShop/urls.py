@@ -19,6 +19,7 @@ from MxShop.settings import MEDIA_ROOT
 from django.views.static import serve
 from goods.views import GoodsListSetView,CategoryViewset
 from users.views import UserViewset
+from user_operation.views import UserFavViewset
 from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken import views
@@ -31,6 +32,8 @@ rooter.register(r"goods",GoodsListSetView,base_name="goods")
 rooter.register(r"categorys",CategoryViewset,base_name="categorys")
 #配置users的url
 rooter.register(r"users",UserViewset,base_name="users")
+#配置收藏的url
+rooter.register(r"userfavs",UserFavViewset,base_name='userfavs')
 
 urlpatterns = [
     url(r'^xadmin/', xadmin.site.urls),
