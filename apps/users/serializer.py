@@ -35,6 +35,13 @@ class SmsSerializer(serializers.Serializer):
 
         return mobile
 
+class UserDetailSerializer(serializers.ModelSerializer):
+    """
+    用户详情序列化
+    """
+    class Meta:
+        model = User
+        fields = ("name","birthday","gender","email","mobile")
 
 class UserRegSerializer(serializers.ModelSerializer):
     # 数据库中不存在的字段
