@@ -79,11 +79,11 @@ class SmsCodeViewSet(CreateModelMixin,viewsets.GenericViewSet):
             }, status=status.HTTP_201_CREATED)
 
 
-class UserViewset(CreateModelMixin,mixins.RetrieveModelMixin,viewsets.GenericViewSet):
+class UserViewset(CreateModelMixin,mixins.UpdateModelMixin,mixins.RetrieveModelMixin,viewsets.GenericViewSet):
     '''用户'''
-    serializer_class = UserRegSerializer
+    # serializer_class = UserRegSerializer
     queryset = User.objects.all()
-    authentication_classes = (authentication.SessionAuthentication,)
+    authentication_classes = (JSONWebTokenAuthentication,authentication.SessionAuthentication,)
 
     # 重写get_serializer_class 方法，动态配置序列化类
     def get_serializer_class(self):
