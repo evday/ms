@@ -19,7 +19,7 @@ import xadmin
 from MxShop.settings import MEDIA_ROOT
 from django.views.static import serve
 from goods.views import GoodsListSetView,CategoryViewset
-from user_operation.views import LeavingMessageViewset
+from user_operation.views import LeavingMessageViewset,AddressViewset
 from users.views import UserViewset
 from user_operation.views import UserFavViewset
 from rest_framework.documentation import include_docs_urls
@@ -39,6 +39,8 @@ rooter.register(r"users",UserViewset,base_name="users")
 rooter.register(r"userfavs",UserFavViewset,base_name='userfavs')
 #配置用户评论的url
 rooter.register(r"messages",LeavingMessageViewset,base_name='messages')
+#配置用户收货地址url
+rooter.register(r"address",AddressViewset,base_name='address')
 
 urlpatterns = [
     url(r'^xadmin/', xadmin.site.urls),
