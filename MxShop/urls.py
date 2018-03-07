@@ -14,16 +14,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url,include
-from rest_framework.request import Request
-
-from rest_framework.views import APIView
-from rest_framework.negotiation import DefaultContentNegotiation
-
 
 import xadmin
 from MxShop.settings import MEDIA_ROOT
 from django.views.static import serve
 from goods.views import GoodsListSetView,CategoryViewset
+from user_operation.views import LeavingMessageViewset
 from users.views import UserViewset
 from user_operation.views import UserFavViewset
 from rest_framework.documentation import include_docs_urls
@@ -41,6 +37,8 @@ rooter.register(r"categorys",CategoryViewset,base_name="categorys")
 rooter.register(r"users",UserViewset,base_name="users")
 #配置收藏的url
 rooter.register(r"userfavs",UserFavViewset,base_name='userfavs')
+#配置用户评论的url
+rooter.register(r"messages",LeavingMessageViewset,base_name='messages')
 
 urlpatterns = [
     url(r'^xadmin/', xadmin.site.urls),

@@ -6,11 +6,13 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.authentication import SessionAuthentication
 
-from .models import UserFav
-from .serializer import UserFavSerializer,UserFavDetailSerializer
+from .models import UserFav,UserLeavingMessage
+from .serializer import UserFavSerializer, UserFavDetailSerializer,LeaveMessageSerializer
 from utils.permissions import IsOwnerOrReadOnly
 
-class UserFavViewset(mixins.CreateModelMixin,mixins.ListModelMixin,mixins.RetrieveModelMixin,mixins.DestroyModelMixin,viewsets.GenericViewSet):
+
+class UserFavViewset(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin,
+                     mixins.DestroyModelMixin, viewsets.GenericViewSet):
     """
     list:
         获取用户收藏列表
@@ -20,9 +22,9 @@ class UserFavViewset(mixins.CreateModelMixin,mixins.ListModelMixin,mixins.Retrie
         收藏商品
     """
     # 对用户进行权限验证，需要登录并且是当前用户
-    permission_classes = (IsAuthenticated,IsOwnerOrReadOnly)
+    permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
     # token 认证
-    authentication_classes = (JSONWebTokenAuthentication,SessionAuthentication,)
+    authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication,)
     lookup_field = "goods_id"
 
     def get_queryset(self):
@@ -36,4 +38,18 @@ class UserFavViewset(mixins.CreateModelMixin,mixins.ListModelMixin,mixins.Retrie
         return UserFavSerializer
 
 
-
+class LeavingMessageViewset(mixins.ListModelMixin, mixins.DestroyModelMixin, mixins.CreateModelMixin,
+                            viewsets.GenericViewSet):
+    """
+    list:
+        获取用户留言
+    create:
+        添加留言
+    delete:
+        删除留言
+    """
+    serializer_class = LeaveMessageSerializer
+    permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
+    authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
+    def get_queryset(self):
+        return UserLeavingMessage.objects.filter(user=self.request.user)

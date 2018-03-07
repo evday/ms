@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'django_filters',
     'xadmin',
     'corsheaders',
-    'crispy_forms',
+    'crispy_forms',# xadmin
     'rest_framework.authtoken',
 ]
 
