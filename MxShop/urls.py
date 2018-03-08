@@ -15,17 +15,22 @@ Including another URLconf
 """
 from django.conf.urls import url,include
 
+
 import xadmin
-from MxShop.settings import MEDIA_ROOT
+
 from django.views.static import serve
-from goods.views import GoodsListSetView,CategoryViewset
-from user_operation.views import LeavingMessageViewset,AddressViewset
-from users.views import UserViewset
-from user_operation.views import UserFavViewset
+
 from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken import views
 from rest_framework_jwt.views import obtain_jwt_token
+
+from goods.views import GoodsListSetView,CategoryViewset
+from user_operation.views import LeavingMessageViewset,AddressViewset
+from users.views import UserViewset
+from user_operation.views import UserFavViewset
+from trade.views import ShoppingCarViewset
+from MxShop.settings import MEDIA_ROOT
 
 
 rooter = DefaultRouter()
@@ -41,6 +46,8 @@ rooter.register(r"userfavs",UserFavViewset,base_name='userfavs')
 rooter.register(r"messages",LeavingMessageViewset,base_name='messages')
 #配置用户收货地址url
 rooter.register(r"address",AddressViewset,base_name='address')
+#配置购物车url
+rooter.register(r"shopcarts",ShoppingCarViewset,base_name='shopcarts')
 
 urlpatterns = [
     url(r'^xadmin/', xadmin.site.urls),
