@@ -5,7 +5,7 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 
 from utils.permissions import IsOwnerOrReadOnly
-from .serializer import ShoppingCarSerializer
+from .serializer import ShoppingCarSerializer,ShoppingCarDetailSerializer
 from .models import ShoppingCart
 
 class ShoppingCarViewset(viewsets.ModelViewSet):
@@ -21,4 +21,12 @@ class ShoppingCarViewset(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,IsOwnerOrReadOnly)
     authentication_classes = (JSONWebTokenAuthentication,SessionAuthentication)
     serializer_class = ShoppingCarSerializer
-    queryset = ShoppingCart.objects.all()
+    lookup_field = "goods_id" # 传递商品id 做删除和修改操作
+    def get_queryset(self):
+        return ShoppingCart.objects.filter(user=self.request.user)
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return ShoppingCarDetailSerializer
+        else:
+            return ShoppingCarSerializer
