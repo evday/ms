@@ -29,7 +29,7 @@ from goods.views import GoodsListSetView,CategoryViewset
 from user_operation.views import LeavingMessageViewset,AddressViewset
 from users.views import UserViewset
 from user_operation.views import UserFavViewset
-from trade.views import ShoppingCarViewset
+from trade.views import ShoppingCarViewset,OrderViewset
 from MxShop.settings import MEDIA_ROOT
 
 
@@ -48,7 +48,8 @@ rooter.register(r"messages",LeavingMessageViewset,base_name='messages')
 rooter.register(r"address",AddressViewset,base_name='address')
 #配置购物车url
 rooter.register(r"shopcarts",ShoppingCarViewset,base_name='shopcarts')
-
+#配置订单url
+rooter.register(r"orders",OrderViewset,base_name='orders')
 urlpatterns = [
     url(r'^xadmin/', xadmin.site.urls),
     url(r'^media/(?P<path>.*)$',serve,{"document_root":MEDIA_ROOT}),#配置media 路径

@@ -2,11 +2,11 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
-
+from rest_framework import mixins
 
 from utils.permissions import IsOwnerOrReadOnly
-from .serializer import ShoppingCarSerializer,ShoppingCarDetailSerializer
-from .models import ShoppingCart
+from .serializer import ShoppingCarSerializer,ShoppingCarDetailSerializer,OrderSerializer,OderDetailSerializer
+from .models import ShoppingCart,OrderInfo,OrderGoods
 
 class ShoppingCarViewset(viewsets.ModelViewSet):
     """
@@ -30,3 +30,42 @@ class ShoppingCarViewset(viewsets.ModelViewSet):
             return ShoppingCarDetailSerializer
         else:
             return ShoppingCarSerializer
+
+
+class OrderViewset(mixins.ListModelMixin,mixins.RetrieveModelMixin,mixins.CreateModelMixin,mixins.DestroyModelMixin,viewsets.GenericViewSet):
+    """
+    订单管理
+
+    list:
+        获取个人订单
+    delete：
+        删除订单
+    create:
+        新增订单
+    """
+
+    permission_classes = (IsAuthenticated,IsOwnerOrReadOnly)
+    authentication_classes = [JSONWebTokenAuthentication,SessionAuthentication]
+    serializer_class = OrderSerializer
+
+    def get_queryset(self):
+        return OrderInfo.objects.filter(user=self.request.user)
+
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return OderDetailSerializer
+        return OrderSerializer
+
+    def perform_create(self, serializer):
+        order = serializer.save()
+        shop_cars= ShoppingCart.objects.filter(user = self.request.user)
+        for shop_car in shop_cars:
+            order_goods = OrderGoods()
+            order_goods.goods = shop_car.goods
+            order_goods.goods_num = shop_car.nums
+            order_goods.order = order
+            order_goods.save()
+
+            # 清空购物车
+            shop_car.delete()
+        return order

@@ -1,17 +1,20 @@
+import time
+
 from rest_framework import serializers
 
-from .models import Goods,ShoppingCart
+from .models import Goods,ShoppingCart,OrderInfo,OrderGoods
 from goods.serializer import GoodsSerialize
 
 
 class ShoppingCarDetailSerializer(serializers.ModelSerializer):
+    """购物车详情"""
     goods = GoodsSerialize(many=False,read_only=True)
     class Meta:
         model = ShoppingCart
         fields = ("goods","nums")
 
 class ShoppingCarSerializer(serializers.Serializer):
-
+    """购物车"""
     user = serializers.HiddenField(
         default=serializers.CurrentUserDefault()
     )
@@ -49,5 +52,43 @@ class ShoppingCarSerializer(serializers.Serializer):
         instance.save()
         return instance
 
+class OrderGoodsSerializer(serializers.ModelSerializer):
+    goods = GoodsSerialize(many=False)
+    class Meta:
+        model = OrderGoods
+        fields = "__all__"
+
+class OderDetailSerializer(serializers.ModelSerializer):
+    goods = OrderGoodsSerializer(many=True)
+    class Meta:
+        model = OrderInfo
+        fields = "__all__"
 
 
+
+class OrderSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
+
+    pay_status = serializers.CharField(read_only=True)
+    trade_no = serializers.CharField(read_only=True)
+    order_sn = serializers.CharField(read_only=True)
+    pay_time = serializers.DateTimeField(read_only=True)
+
+    def generate_order_sn(self):
+        #当前时间+uid+随机数 生成订单号
+        from random import Random
+        random_ins = Random()
+        order_sn = "{time_str}{userid}{ranstr}".format(time_str=time.strftime("%Y%m%m%H%M%S"),
+                                                       userid=self.context["request"].user.id,
+                                                       ranstr = random_ins.randint(10,99))
+        return order_sn
+
+    def validate(self,attrs):
+        attrs["order_sn"] = self.generate_order_sn()
+        return attrs
+
+    class Meta:
+        model = OrderInfo
+        fields = "__all__"
