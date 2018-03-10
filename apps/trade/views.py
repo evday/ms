@@ -5,7 +5,7 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework import mixins
 
 from utils.permissions import IsOwnerOrReadOnly
-from .serializer import ShoppingCarSerializer,ShoppingCarDetailSerializer,OrderSerializer,OderDetailSerializer
+from .serializer import ShoppingCarSerializer,ShoppingCarDetailSerializer,OrderSerializer,OrderDetailSerializer
 from .models import ShoppingCart,OrderInfo,OrderGoods
 
 class ShoppingCarViewset(viewsets.ModelViewSet):
@@ -32,20 +32,19 @@ class ShoppingCarViewset(viewsets.ModelViewSet):
             return ShoppingCarSerializer
 
 
-class OrderViewset(mixins.ListModelMixin,mixins.RetrieveModelMixin,mixins.CreateModelMixin,mixins.DestroyModelMixin,viewsets.GenericViewSet):
+class OrderViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin, mixins.DestroyModelMixin,
+                   viewsets.GenericViewSet):
     """
     订单管理
-
     list:
         获取个人订单
-    delete：
+    delete:
         删除订单
-    create:
+    create：
         新增订单
     """
-
-    permission_classes = (IsAuthenticated,IsOwnerOrReadOnly)
-    authentication_classes = [JSONWebTokenAuthentication,SessionAuthentication]
+    permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
+    authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
     serializer_class = OrderSerializer
 
     def get_queryset(self):
@@ -53,19 +52,18 @@ class OrderViewset(mixins.ListModelMixin,mixins.RetrieveModelMixin,mixins.Create
 
     def get_serializer_class(self):
         if self.action == "retrieve":
-            return OderDetailSerializer
+            return OrderDetailSerializer
         return OrderSerializer
 
     def perform_create(self, serializer):
         order = serializer.save()
-        shop_cars= ShoppingCart.objects.filter(user = self.request.user)
-        for shop_car in shop_cars:
+        shop_carts = ShoppingCart.objects.filter(user=self.request.user)
+        for shop_cart in shop_carts:
             order_goods = OrderGoods()
-            order_goods.goods = shop_car.goods
-            order_goods.goods_num = shop_car.nums
+            order_goods.goods = shop_cart.goods
+            order_goods.goods_num = shop_cart.nums
             order_goods.order = order
             order_goods.save()
 
-            # 清空购物车
-            shop_car.delete()
+            shop_cart.delete()
         return order

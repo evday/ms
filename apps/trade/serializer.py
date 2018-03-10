@@ -58,7 +58,7 @@ class OrderGoodsSerializer(serializers.ModelSerializer):
         model = OrderGoods
         fields = "__all__"
 
-class OderDetailSerializer(serializers.ModelSerializer):
+class OrderDetailSerializer(serializers.ModelSerializer):
     goods = OrderGoodsSerializer(many=True)
     class Meta:
         model = OrderInfo
