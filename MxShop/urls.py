@@ -13,11 +13,11 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url,include
-
 
 import xadmin
 
+from django.conf.urls import url,include
+from django.views.generic import TemplateView
 from django.views.static import serve
 
 from rest_framework.documentation import include_docs_urls
@@ -54,8 +54,9 @@ urlpatterns = [
     url(r'^xadmin/', xadmin.site.urls),
     url(r'^media/(?P<path>.*)$',serve,{"document_root":MEDIA_ROOT}),#配置media 路径
     url(r'^api-auth/', include('rest_framework.urls')),
-
     url(r'^', include(rooter.urls)),
+    url(r'^index/', TemplateView.as_view(template_name='index.html'),name='index'),
+
     url(r'^docs/', include_docs_urls(title="暮雪生鲜")),
 
     #drf自带的token认证模式
