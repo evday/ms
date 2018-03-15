@@ -20,7 +20,7 @@ class GoodsPagination(PageNumberPagination):
 
 
 from .models import Goods,GoodsCategory,Banner
-from .serializer import GoodsSerialize,CategorySerializer,BannerSerializer
+from .serializer import GoodsSerialize,CategorySerializer,BannerSerializer,IndexCategorySerializer
 
 # class GoodsListView(APIView):
 #     def get(self, request, format=None):
@@ -53,3 +53,11 @@ class BannerViewset(mixins.ListModelMixin,viewsets.GenericViewSet):
     """
     queryset = Banner.objects.all().order_by("index")
     serializer_class = BannerSerializer
+
+
+class IndexCategoryViewset(mixins.ListModelMixin,viewsets.GenericViewSet):
+    """
+    首页商品分类数据
+    """
+    queryset = GoodsCategory.objects.filter(is_tab=True,name__in=["生鲜食品","酒水饮料"])
+    serializer_class = IndexCategorySerializer

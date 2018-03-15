@@ -74,6 +74,18 @@ class Goods(models.Model):
         return self.name
 
 
+class IndexAd(models.Model):
+    """首页广告类别"""
+    category = models.ForeignKey(GoodsCategory,related_name='category',verbose_name='商品类目')
+    goods = models.ForeignKey(Goods,related_name='goods')
+
+    class Meta:
+        verbose_name = "首页商品广告类别"
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.goods.name
+
 class GoodsImage(models.Model):
     '''商品轮播图'''
     goods = models.ForeignKey(Goods,verbose_name = "商品",related_name = "images")
