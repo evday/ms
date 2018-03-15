@@ -25,7 +25,7 @@ from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken import views
 from rest_framework_jwt.views import obtain_jwt_token
 
-from goods.views import GoodsListSetView,CategoryViewset
+from goods.views import GoodsListSetView,CategoryViewset,BannerViewset
 from user_operation.views import LeavingMessageViewset,AddressViewset
 from users.views import UserViewset
 from user_operation.views import UserFavViewset
@@ -50,6 +50,8 @@ rooter.register(r"address",AddressViewset,base_name='address')
 rooter.register(r"shopcarts",ShoppingCarViewset,base_name='shopcarts')
 #配置订单url
 rooter.register(r"orders",OrderViewset,base_name='orders')
+#配置轮播图url
+rooter.register(r"banner",BannerViewset,base_name='banner')
 urlpatterns = [
     url(r'^xadmin/', xadmin.site.urls),
     url(r'^media/(?P<path>.*)$',serve,{"document_root":MEDIA_ROOT}),#配置media 路径

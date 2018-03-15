@@ -19,8 +19,8 @@ class GoodsPagination(PageNumberPagination):
     page_query_param = "page"
 
 
-from .models import Goods,GoodsCategory
-from .serializer import GoodsSerialize,CategorySerializer
+from .models import Goods,GoodsCategory,Banner
+from .serializer import GoodsSerialize,CategorySerializer,BannerSerializer
 
 # class GoodsListView(APIView):
 #     def get(self, request, format=None):
@@ -45,3 +45,11 @@ class GoodsListSetView(mixins.ListModelMixin,mixins.RetrieveModelMixin,viewsets.
 class CategoryViewset(mixins.ListModelMixin,mixins.RetrieveModelMixin,viewsets.GenericViewSet):
     queryset = GoodsCategory.objects.filter(category_type=1)
     serializer_class = CategorySerializer
+
+
+class BannerViewset(mixins.ListModelMixin,viewsets.GenericViewSet):
+    """
+    获取轮播图列表
+    """
+    queryset = Banner.objects.all().order_by("index")
+    serializer_class = BannerSerializer

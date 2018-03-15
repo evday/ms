@@ -164,7 +164,7 @@ class AlipayView(APIView):
                     existed_order.save()
             return Response("success") # 返回状态，如果不返回支付宝会一直发起请求
 
-        
+
 
 
 
