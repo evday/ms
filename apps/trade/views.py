@@ -31,6 +31,30 @@ class ShoppingCarViewset(viewsets.ModelViewSet):
     authentication_classes = (JSONWebTokenAuthentication,SessionAuthentication)
     serializer_class = ShoppingCarSerializer
     lookup_field = "goods_id" # 传递商品id 做删除和修改操作
+
+    def perform_create(self, serializer):
+        '''加入到购物车，库存数减一'''
+        shop_cart = serializer.save()
+        goods = shop_cart.goods
+        goods.goods_num -= shop_cart.nums
+        goods.save()
+
+    def perform_destroy(self, instance):
+        '''从购物车删除后，库存数加一'''
+        goods = instance.goods
+        goods.goods_num += instance.nums
+        goods.save()
+        instance.delete()
+
+    def perform_update(self, serializer):
+        """更新购物车中商品数量，库存数做相应改变"""
+        existed_record = ShoppingCart.objects.get(id=serializer.id) # 获取现在的购物车对象
+        existed_nums = existed_record.nums  # 获取现在的购物车商品数
+        save_record = serializer.save() # 保存时的商品数
+        nums = save_record.nums - existed_nums  # 这里肯能会是负数
+        goods = save_record.goods
+        goods.goods_num -= nums # 所以这里要用减号，如果nums是负数那么负负得正
+        goods.save()
     def get_queryset(self):
         return ShoppingCart.objects.filter(user=self.request.user)
 
@@ -152,8 +176,8 @@ class AlipayView(APIView):
 
             existed_orders = OrderInfo.objects.filter(order_sn=order_sn)
             for existed_order in existed_orders:
-                order_goods = existed_order.goods.all()
-                for order_good in order_goods:
+                order_goods = existed_order.goods.all() # 根据related_name goods 取到商品订单Queryset
+                for order_good in order_goods: #销量加一
                     goods = order_good.goods
                     goods.sold_num += order_good.goods_num
                     goods.save()
