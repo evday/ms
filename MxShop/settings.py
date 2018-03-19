@@ -189,6 +189,11 @@ REGEX_MOBILE = '^1[358]\d{9}$|^147\d{8}$|^176\d{8}$'
 # 云片网设置
 APIKEY = 'b45f959119f80bac34d83c41d9901f4d'
 
+# 设置extensions 缓存过期时间
+REST_FRAMEWORK_EXTENSIONS = {
+    'DEFAULT_CACHE_RESPONSE_TIMEOUT': 60 * 15
+}
+
 # 支付宝相关配置
 PRIVATE_KEY_PATH = os.path.join(BASE_DIR,'apps/trade/keys/private_2048.txt')
 ALI_PUB_KEY_PATH = os.path.join(BASE_DIR,'apps/trade/keys/alipay_key_2048.txt')

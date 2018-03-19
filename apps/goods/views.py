@@ -8,6 +8,7 @@ from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.authentication import  TokenAuthentication
 from rest_framework import serializers
+from rest_framework_extensions.cache.mixins import CacheResponseMixin
 
 
 from .filters import GoodsFilter
@@ -28,7 +29,7 @@ from .serializer import GoodsSerialize,CategorySerializer,BannerSerializer,Index
 #         serializer = GoodsSerialize(goods, many=True)
 #
 #         return Response(serializer.data)
-class GoodsListSetView(mixins.ListModelMixin,mixins.RetrieveModelMixin,viewsets.GenericViewSet):
+class GoodsListSetView(CacheResponseMixin,mixins.ListModelMixin,mixins.RetrieveModelMixin,viewsets.GenericViewSet):
     '''
     商品列表页,分页，搜索，过滤，排序
     '''
