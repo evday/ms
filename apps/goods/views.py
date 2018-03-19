@@ -9,6 +9,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.authentication import  TokenAuthentication
 from rest_framework import serializers
 from rest_framework_extensions.cache.mixins import CacheResponseMixin
+from rest_framework.throttling import UserRateThrottle,AnonRateThrottle
 
 
 from .filters import GoodsFilter
@@ -36,6 +37,7 @@ class GoodsListSetView(CacheResponseMixin,mixins.ListModelMixin,mixins.RetrieveM
     queryset = Goods.objects.all()
     serializer_class = GoodsSerialize
     pagination_class = GoodsPagination
+    throttle_classes = (UserRateThrottle,AnonRateThrottle)
     # authentication_classes = (TokenAuthentication,)
     filter_backends = (DjangoFilterBackend,filters.SearchFilter,filters.OrderingFilter)
     filter_class = GoodsFilter
